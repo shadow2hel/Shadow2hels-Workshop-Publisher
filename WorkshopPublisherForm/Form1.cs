@@ -19,6 +19,8 @@ namespace WorkshopPublisherForm
         string picturePath;
         DataTable ActionQueue = new DataTable();
 
+        int AddonID;
+
 
 
         public Form1()
@@ -268,9 +270,7 @@ namespace WorkshopPublisherForm
         private void dvgAddonsList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             string strAddonname = dgvAddonsList.SelectedRows[0].Cells["Name"].Value.ToString();
-            int AddonID = (int)dgvAddonsList.SelectedRows[0].Cells["ID"].Value;
-
-            MessageBox.Show("" + AddonID);
+            AddonID = (int)dgvAddonsList.SelectedRows[0].Cells["ID"].Value;
 
             texbTitle.Text = strAddonname;
 
@@ -507,10 +507,26 @@ namespace WorkshopPublisherForm
                                 ActionQueue.Rows.Add(row);
                                 break;
                             case "Update":
-
+                                row.SetField("Action", "Update");
+                                row.SetField("Job", "Updating addon " + texbTitle.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmpublishLocation + " update -addon " + "GmaLocation" + " -id" + AddonID); // Replace gmalocation with variable
+                                row.SetField("JSON", addon);
+                                row.SetField("Location", texbFileorFolder.Text);
+                                ActionQueue.Rows.Add(row);
                                 break;
                             case "Extract":
-
+                                row.SetField("Action", "Extract");
+                                row.SetField("Job", "Extracting addon " + texbFileorFolder.Text);
+                                row.SetField("Status", "Waiting..");
+                                if (chkboxOutput.Checked == false)
+                                {
+                                    row.SetField("Command", GmadLocation + " extract -file " + texbFileorFolder);
+                                }
+                                else {
+                                    row.SetField("Command", GmadLocation + " extract -file " + texbFileorFolder + " -out " + texbExtractOutput.Text);
+                                }
+                                ActionQueue.Rows.Add(row);
                                 break;
                             default:
                                 break;
