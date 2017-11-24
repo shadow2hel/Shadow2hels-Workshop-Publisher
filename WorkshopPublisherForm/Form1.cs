@@ -496,6 +496,8 @@ namespace WorkshopPublisherForm
                                 row.SetField("Command", GmpublishLocation + " create -addon " + "GmaLocation" + " -icon" + picturePath ); // Replace gmalocation with variable
                                 row.SetField("JSON", addon);
                                 row.SetField("Location", texbFileorFolder.Text);
+                                ActionQueue.Rows.Add(row);
+
                                 break;
                             case "Create GMA":
 
