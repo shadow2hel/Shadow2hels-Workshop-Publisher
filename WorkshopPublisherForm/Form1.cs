@@ -497,10 +497,14 @@ namespace WorkshopPublisherForm
                                 row.SetField("JSON", addon);
                                 row.SetField("Location", texbFileorFolder.Text);
                                 ActionQueue.Rows.Add(row);
-
                                 break;
                             case "Create GMA":
-
+                                row.SetField("Action", "Create GMA");
+                                row.SetField("Job", "Creating .gma from " + texbGMAOutput.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmadLocation + " create -folder " + texbFileorFolder + " -out" + texbGMAOutput.Text);
+                                row.SetField("JSON", addon);
+                                ActionQueue.Rows.Add(row);
                                 break;
                             case "Update":
 
