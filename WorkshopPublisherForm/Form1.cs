@@ -470,12 +470,12 @@ namespace WorkshopPublisherForm
             ALIgnoreExt.Remove("\\\"");
 
             addon.ignore = ALIgnoreExt;
-            MessageBox.Show(ALIgnoreExt[0].ToString());
 
-            string output = JsonConvert.SerializeObject(addon);
-            output = output.Replace("\\\"", "");
-
-            File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
+            // Here's some code for later
+            //string output = JsonConvert.SerializeObject(addon);
+            //output = output.Replace("\\\"", "");
+            //
+            //File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
         }
 
         private void btnSelectGMAOutput_Click(object sender, EventArgs e)
