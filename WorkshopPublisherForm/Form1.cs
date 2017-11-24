@@ -477,6 +477,42 @@ namespace WorkshopPublisherForm
 
             addon.ignore = ALIgnoreExt;
 
+            string SelectedRdButton;
+
+            foreach (Control button in grpboxMode.Controls)
+            {
+                if (button is RadioButton)
+                {
+                    if (((RadioButton)button).Checked == true)
+                    {
+                        SelectedRdButton = ((RadioButton)button).Text;
+
+                        DataRow row = ActionQueue.NewRow();
+                        switch (SelectedRdButton) {
+                            case "Create":
+                                row.SetField("Action", "Create");
+                                row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmpublishLocation + " create -addon " + "GmaLocation" + " -icon" + picturePath ); // Replace gmalocation with variable
+                                row.SetField("JSON", addon);
+                                row.SetField("Location", texbFileorFolder.Text);
+                                break;
+                            case "Create GMA":
+
+                                break;
+                            case "Update":
+
+                                break;
+                            case "Extract":
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
             // Here's some code for later
             //string output = JsonConvert.SerializeObject(addon);
             //output = output.Replace("\\\"", "");
