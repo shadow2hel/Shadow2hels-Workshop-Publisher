@@ -164,9 +164,15 @@ namespace WorkshopPublisherForm
             DataColumn colJob = ActionQueue.Columns.Add("Job", typeof(string));
             DataColumn colStatus = ActionQueue.Columns.Add("Status", typeof(string));
             DataColumn colCommand = ActionQueue.Columns.Add("Command", typeof(string));
+            DataColumn colJSON = ActionQueue.Columns.Add("JSON", typeof(object));
+            DataColumn colLocation = ActionQueue.Columns.Add("Location", typeof(string));
+            DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
             dgvQueue.DataSource = ActionQueue;
             dgvQueue.Columns[3].Visible = false;
+            dgvQueue.Columns[4].Visible = false;
+            dgvQueue.Columns[5].Visible = false;
+            dgvQueue.Columns[6].Visible = false;
         }
 
         public dynamic ReturnCheckedTypeRadiobutton(){
