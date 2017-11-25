@@ -167,7 +167,7 @@ namespace WorkshopPublisherForm
             DataColumn colJob = ActionQueue.Columns.Add("Job", typeof(string));
             DataColumn colStatus = ActionQueue.Columns.Add("Status", typeof(string));
             DataColumn colCommand = ActionQueue.Columns.Add("Command", typeof(string));
-            DataColumn colJSON = ActionQueue.Columns.Add("JSON", typeof(object));
+            DataColumn colJSON = ActionQueue.Columns.Add("JSON", typeof(string));
             DataColumn colLocation = ActionQueue.Columns.Add("Location", typeof(string));
             DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
@@ -487,6 +487,12 @@ namespace WorkshopPublisherForm
 
             addon.ignore = ALIgnoreExt;
 
+            // Here's some code for later
+            string output = JsonConvert.SerializeObject(addon);
+            output = output.Replace("\\\"", "");
+
+            MessageBox.Show(output);
+
             string SelectedRdButton;
 
             foreach (Control button in grpboxMode.Controls)
@@ -503,9 +509,10 @@ namespace WorkshopPublisherForm
                                 row.SetField("Action", "Create");
                                 row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
                                 row.SetField("Status", "Waiting..");
-                                row.SetField("Command", GmpublishLocation + " create -addon " + "GmaLocation" + " -icon" + picturePath ); // Replace gmalocation with variable
-                                row.SetField("JSON", addon);
+                                row.SetField("Command", GmpublishLocation + " create -addon " + texbFileorFolder + ".gma" + " -icon" + picturePath );
+                                row.SetField("JSON", output);
                                 row.SetField("Location", texbFileorFolder.Text);
+                                row.SetField("Image", picturePath);
                                 ActionQueue.Rows.Add(row);
                                 break;
                             case "Create GMA":
@@ -520,7 +527,7 @@ namespace WorkshopPublisherForm
                                 row.SetField("Action", "Update");
                                 row.SetField("Job", "Updating addon " + texbTitle.Text);
                                 row.SetField("Status", "Waiting..");
-                                row.SetField("Command", GmpublishLocation + " update -addon " + "GmaLocation" + " -id" + AddonID); // Replace gmalocation with variable
+                                row.SetField("Command", GmpublishLocation + " update -addon " + texbFileorFolder + ".gma" + " -id" + AddonID);
                                 row.SetField("JSON", addon);
                                 row.SetField("Location", texbFileorFolder.Text);
                                 ActionQueue.Rows.Add(row);
@@ -574,12 +581,107 @@ namespace WorkshopPublisherForm
 
         private void btnQueueExecute_Click(object sender, EventArgs e)
         {
-            
+            foreach (DataGridViewRow dr in dgvQueue.Rows) {
+                string Action = dr.Cells[0].Value.ToString();
+                string Command = dr.Cells[3].Value.ToString();
+                string JSON = dr.Cells[4].Value.ToString();
+                string Location = dr.Cells[5].Value.ToString();
+
+                switch (Action) {
+                    case "Create":
+                        // Here's some code for later
+                        string output = JsonConvert.SerializeObject(JSON);
+                        output = output.Replace("\\\"", "");
+
+                        MessageBox.Show(Location);
+                        
+                        File.WriteAllText(Location + "\\addon.json", output);
+
+                        var Gmad = new Process();
+                        Gmad.StartInfo.UseShellExecute = false;
+                        Gmad.StartInfo.CreateNoWindow = true;
+                        Gmad.StartInfo.FileName = GmadLocation;
+                        Gmad.StartInfo.Arguments = "create -folder " + Location;
+                        Gmad.StartInfo.RedirectStandardOutput = true;
+                        Gmad.Start();
+                        break;
+                    case "Create GMA":
+                        MessageBox.Show("Creating GMA");
+                        break;
+                    case "Update":
+                        MessageBox.Show("Updating");
+                        break;
+                    case "Extract":
+                        MessageBox.Show("Extracting");
+                        break;
+                }
+            }
         }
 
         private void btnQueueClear_Click(object sender, EventArgs e)
         {
             ActionQueue.Clear();
+        }
+
+        private int checkCounter;
+        public void LimitCheckboxes(object sender) {
+            CheckBox box = (CheckBox)sender;
+            if (box.Checked)
+                checkCounter++;
+            else
+                checkCounter--;
+
+            // prevent checking
+            if (checkCounter > 2)
+            {
+                MessageBox.Show("You may only select 2 tags!");
+                box.Checked = false;
+            }
+        }
+
+        private void chkboxFun_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxRoleplay_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxScenic_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxMovie_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxRealism_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxCartoon_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxWater_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxComic_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
+        }
+
+        private void chkboxBuild_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitCheckboxes(sender);
         }
     }
 }

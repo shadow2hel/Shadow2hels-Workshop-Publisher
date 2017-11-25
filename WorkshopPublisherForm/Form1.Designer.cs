@@ -390,6 +390,7 @@
             this.chkboxBuild.Tag = "build";
             this.chkboxBuild.Text = "Build";
             this.chkboxBuild.UseVisualStyleBackColor = true;
+            this.chkboxBuild.CheckedChanged += new System.EventHandler(this.chkboxBuild_CheckedChanged);
             // 
             // chkboxComic
             // 
@@ -401,6 +402,7 @@
             this.chkboxComic.Tag = "comic";
             this.chkboxComic.Text = "Comic";
             this.chkboxComic.UseVisualStyleBackColor = true;
+            this.chkboxComic.CheckedChanged += new System.EventHandler(this.chkboxComic_CheckedChanged);
             // 
             // chkboxWater
             // 
@@ -412,6 +414,7 @@
             this.chkboxWater.Tag = "water";
             this.chkboxWater.Text = "Water";
             this.chkboxWater.UseVisualStyleBackColor = true;
+            this.chkboxWater.CheckedChanged += new System.EventHandler(this.chkboxWater_CheckedChanged);
             // 
             // chkboxCartoon
             // 
@@ -423,6 +426,7 @@
             this.chkboxCartoon.Tag = "cartoon";
             this.chkboxCartoon.Text = "Cartoon";
             this.chkboxCartoon.UseVisualStyleBackColor = true;
+            this.chkboxCartoon.CheckedChanged += new System.EventHandler(this.chkboxCartoon_CheckedChanged);
             // 
             // chkboxRealism
             // 
@@ -434,6 +438,7 @@
             this.chkboxRealism.Tag = "realism";
             this.chkboxRealism.Text = "Realism";
             this.chkboxRealism.UseVisualStyleBackColor = true;
+            this.chkboxRealism.CheckedChanged += new System.EventHandler(this.chkboxRealism_CheckedChanged);
             // 
             // chkboxMovie
             // 
@@ -445,6 +450,7 @@
             this.chkboxMovie.Tag = "movie";
             this.chkboxMovie.Text = "Movie";
             this.chkboxMovie.UseVisualStyleBackColor = true;
+            this.chkboxMovie.CheckedChanged += new System.EventHandler(this.chkboxMovie_CheckedChanged);
             // 
             // chkboxScenic
             // 
@@ -456,6 +462,7 @@
             this.chkboxScenic.Tag = "scenic";
             this.chkboxScenic.Text = "Scenic";
             this.chkboxScenic.UseVisualStyleBackColor = true;
+            this.chkboxScenic.CheckedChanged += new System.EventHandler(this.chkboxScenic_CheckedChanged);
             // 
             // chkboxRoleplay
             // 
@@ -467,6 +474,7 @@
             this.chkboxRoleplay.Tag = "roleplay";
             this.chkboxRoleplay.Text = "Roleplay";
             this.chkboxRoleplay.UseVisualStyleBackColor = true;
+            this.chkboxRoleplay.CheckedChanged += new System.EventHandler(this.chkboxRoleplay_CheckedChanged);
             // 
             // chkboxFun
             // 
@@ -478,6 +486,7 @@
             this.chkboxFun.Tag = "fun";
             this.chkboxFun.Text = "Fun";
             this.chkboxFun.UseVisualStyleBackColor = true;
+            this.chkboxFun.CheckedChanged += new System.EventHandler(this.chkboxFun_CheckedChanged);
             // 
             // grpboxType
             // 
