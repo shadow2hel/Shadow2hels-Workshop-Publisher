@@ -246,7 +246,9 @@ namespace WorkshopPublisherForm
                 try
                 {
                     localKey = Registry.CurrentUser.CreateSubKey(@"Software\Shadow2hel\ShadowsPublisher\lastbrowsed");
-                    localKey.SetValue(Key, fldAddonFile.FileName);
+                    string path = Path.GetDirectoryName(fldAddonFile.FileName);
+                    MessageBox.Show(path);
+                    localKey.SetValue(Key, path);
                     return fldAddonFile.FileName;
                 }
                 catch (Exception ex)
@@ -585,9 +587,10 @@ namespace WorkshopPublisherForm
         {
             string output = UseFileDialog("lastFileExtract", "GMA *.gma|*.gma");
             texbFileExtract.Text = output;
-            string Extract = Path.GetFullPath(Path.Combine(output, @"..\"));
+            
             if (texbExtractOutput.Text == "") {
                 texbExtractOutput.Text = output.Replace(".gma","");
+                string Extract = Path.GetFullPath(Path.Combine(output, @"..\"));
             }
         }
 
