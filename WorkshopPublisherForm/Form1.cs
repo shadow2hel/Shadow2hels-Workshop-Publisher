@@ -19,6 +19,8 @@ namespace WorkshopPublisherForm
         string picturePath;
         DataTable ActionQueue = new DataTable();
 
+        int AddonID;
+
 
 
         public Form1()
@@ -164,9 +166,15 @@ namespace WorkshopPublisherForm
             DataColumn colJob = ActionQueue.Columns.Add("Job", typeof(string));
             DataColumn colStatus = ActionQueue.Columns.Add("Status", typeof(string));
             DataColumn colCommand = ActionQueue.Columns.Add("Command", typeof(string));
+            DataColumn colJSON = ActionQueue.Columns.Add("JSON", typeof(object));
+            DataColumn colLocation = ActionQueue.Columns.Add("Location", typeof(string));
+            DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
             dgvQueue.DataSource = ActionQueue;
-            dgvQueue.Columns[3].Visible = false;
+            dgvQueue.Columns[3].Visible = true;
+            dgvQueue.Columns[4].Visible = true;
+            dgvQueue.Columns[5].Visible = true;
+            dgvQueue.Columns[6].Visible = true;
         }
 
         public dynamic ReturnCheckedTypeRadiobutton(){
@@ -262,9 +270,7 @@ namespace WorkshopPublisherForm
         private void dvgAddonsList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             string strAddonname = dgvAddonsList.SelectedRows[0].Cells["Name"].Value.ToString();
-            int AddonID = (int)dgvAddonsList.SelectedRows[0].Cells["ID"].Value;
-
-            MessageBox.Show("" + AddonID);
+            AddonID = (int)dgvAddonsList.SelectedRows[0].Cells["ID"].Value;
 
             texbTitle.Text = strAddonname;
 
@@ -470,12 +476,70 @@ namespace WorkshopPublisherForm
             ALIgnoreExt.Remove("\\\"");
 
             addon.ignore = ALIgnoreExt;
-            MessageBox.Show(ALIgnoreExt[0].ToString());
 
-            string output = JsonConvert.SerializeObject(addon);
-            output = output.Replace("\\\"", "");
+            string SelectedRdButton;
 
-            File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
+            foreach (Control button in grpboxMode.Controls)
+            {
+                if (button is RadioButton)
+                {
+                    if (((RadioButton)button).Checked == true)
+                    {
+                        SelectedRdButton = ((RadioButton)button).Text;
+
+                        DataRow row = ActionQueue.NewRow();
+                        switch (SelectedRdButton) {
+                            case "Create":
+                                row.SetField("Action", "Create");
+                                row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmpublishLocation + " create -addon " + "GmaLocation" + " -icon" + picturePath ); // Replace gmalocation with variable
+                                row.SetField("JSON", addon);
+                                row.SetField("Location", texbFileorFolder.Text);
+                                ActionQueue.Rows.Add(row);
+                                break;
+                            case "Create GMA":
+                                row.SetField("Action", "Create GMA");
+                                row.SetField("Job", "Creating .gma from " + texbGMAOutput.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmadLocation + " create -folder " + texbFileorFolder + " -out" + texbGMAOutput.Text);
+                                row.SetField("JSON", addon);
+                                ActionQueue.Rows.Add(row);
+                                break;
+                            case "Update":
+                                row.SetField("Action", "Update");
+                                row.SetField("Job", "Updating addon " + texbTitle.Text);
+                                row.SetField("Status", "Waiting..");
+                                row.SetField("Command", GmpublishLocation + " update -addon " + "GmaLocation" + " -id" + AddonID); // Replace gmalocation with variable
+                                row.SetField("JSON", addon);
+                                row.SetField("Location", texbFileorFolder.Text);
+                                ActionQueue.Rows.Add(row);
+                                break;
+                            case "Extract":
+                                row.SetField("Action", "Extract");
+                                row.SetField("Job", "Extracting addon " + texbFileorFolder.Text);
+                                row.SetField("Status", "Waiting..");
+                                if (chkboxOutput.Checked == false)
+                                {
+                                    row.SetField("Command", GmadLocation + " extract -file " + texbFileorFolder);
+                                }
+                                else {
+                                    row.SetField("Command", GmadLocation + " extract -file " + texbFileorFolder + " -out " + texbExtractOutput.Text);
+                                }
+                                ActionQueue.Rows.Add(row);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // Here's some code for later
+            //string output = JsonConvert.SerializeObject(addon);
+            //output = output.Replace("\\\"", "");
+            //
+            //File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
         }
 
         private void btnSelectGMAOutput_Click(object sender, EventArgs e)

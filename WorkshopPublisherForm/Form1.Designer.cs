@@ -36,7 +36,6 @@
             this.grpboxApplyingMode = new System.Windows.Forms.GroupBox();
             this.btnAddToQueue = new System.Windows.Forms.Button();
             this.grpboxExtract = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.btnFolderExtract = new System.Windows.Forms.Button();
             this.texbExtractOutput = new System.Windows.Forms.TextBox();
             this.btnFileExtract = new System.Windows.Forms.Button();
@@ -89,6 +88,7 @@
             this.grpboxLog = new System.Windows.Forms.GroupBox();
             this.texbLog = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.chkboxOutput = new System.Windows.Forms.CheckBox();
             this.grpboxMode.SuspendLayout();
             this.grpboxApplyingMode.SuspendLayout();
             this.grpboxExtract.SuspendLayout();
@@ -201,7 +201,7 @@
             // 
             // grpboxExtract
             // 
-            this.grpboxExtract.Controls.Add(this.label1);
+            this.grpboxExtract.Controls.Add(this.chkboxOutput);
             this.grpboxExtract.Controls.Add(this.btnFolderExtract);
             this.grpboxExtract.Controls.Add(this.texbExtractOutput);
             this.grpboxExtract.Controls.Add(this.btnFileExtract);
@@ -213,15 +213,6 @@
             this.grpboxExtract.TabIndex = 15;
             this.grpboxExtract.TabStop = false;
             this.grpboxExtract.Text = "Extract";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 49);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Output:";
             // 
             // btnFolderExtract
             // 
@@ -235,9 +226,9 @@
             // 
             // texbExtractOutput
             // 
-            this.texbExtractOutput.Location = new System.Drawing.Point(56, 46);
+            this.texbExtractOutput.Location = new System.Drawing.Point(67, 46);
             this.texbExtractOutput.Name = "texbExtractOutput";
-            this.texbExtractOutput.Size = new System.Drawing.Size(385, 20);
+            this.texbExtractOutput.Size = new System.Drawing.Size(374, 20);
             this.texbExtractOutput.TabIndex = 4;
             // 
             // btnFileExtract
@@ -787,6 +778,16 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // chkboxOutput
+            // 
+            this.chkboxOutput.AutoSize = true;
+            this.chkboxOutput.Location = new System.Drawing.Point(3, 48);
+            this.chkboxOutput.Name = "chkboxOutput";
+            this.chkboxOutput.Size = new System.Drawing.Size(58, 17);
+            this.chkboxOutput.TabIndex = 7;
+            this.chkboxOutput.Text = "Output";
+            this.chkboxOutput.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -885,7 +886,7 @@
         private System.Windows.Forms.Button btnQueueClear;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnAddToQueue;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkboxOutput;
     }
 }
 
