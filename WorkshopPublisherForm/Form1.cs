@@ -607,13 +607,14 @@ namespace WorkshopPublisherForm
                 string JSON = dr.Cells[4].Value.ToString();
                 string Location = dr.Cells[5].Value.ToString();
                 string Status = dr.Cells[2].Value.ToString();
+                string Image = dr.Cells[6].Value.ToString();
 
 
                 if(Status == "Waiting..") { 
                     switch (Action) {
                         case "Create":
                             dr.Cells[2].Value = "Busy";
-                            // Here's some code for later
+
                             string output = JsonConvert.SerializeObject(JSON);
                             output = output.Replace("\\", "");
                             output = output.Remove(0, 1);
@@ -635,7 +636,21 @@ namespace WorkshopPublisherForm
                             Gmad.WaitForExit();
                             Gmad.Close();
 
+                            var Gmpublish = new Process();
+                            Gmpublish.StartInfo.UseShellExecute = false;
+                            Gmpublish.StartInfo.CreateNoWindow = true;
+                            Gmpublish.StartInfo.FileName = GmpublishLocation;
+                            Gmpublish.StartInfo.Arguments = "create -addon " + Location + ".gma -icon " + Image;
+                            Gmpublish.StartInfo.RedirectStandardOutput = true;
+                            Gmpublish.Start();
+
+                            texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+
+                            Gmpublish.WaitForExit();
+                            Gmpublish.Close();
+
                             File.Delete(Location + "\\addon.json");
+                            File.Delete(Location + ".gma");
                             dr.Cells[2].Value = "Done";
                             break;
                         case "Create GMA":
