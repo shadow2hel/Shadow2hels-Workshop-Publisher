@@ -171,10 +171,10 @@ namespace WorkshopPublisherForm
             DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
             dgvQueue.DataSource = ActionQueue;
-            dgvQueue.Columns[3].Visible = false;
-            dgvQueue.Columns[4].Visible = false;
-            dgvQueue.Columns[5].Visible = false;
-            dgvQueue.Columns[6].Visible = false;
+            dgvQueue.Columns[3].Visible = true;
+            dgvQueue.Columns[4].Visible = true;
+            dgvQueue.Columns[5].Visible = true;
+            dgvQueue.Columns[6].Visible = true;
         }
 
         public dynamic ReturnCheckedTypeRadiobutton(){
