@@ -25,5 +25,6 @@ PM> Install-Package WindowsAPICodePack-Core -Version 1.1.2
     Install-Package WindowsAPICodePack-ShellExtensions
 ``` 
 ## License
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+
 The line located in WorkshopPublisherForm/Form1.cs at line 277 is licensed under the MIT License of the original creator - see the LICENSE.DCSOUP.md file for details.
