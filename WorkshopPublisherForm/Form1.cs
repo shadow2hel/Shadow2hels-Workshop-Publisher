@@ -189,10 +189,9 @@ namespace WorkshopPublisherForm
             }
             return "No radiobutton selected!";
         }
-
+        
         public string UseFolderDialog(string Key) {
             var fbdFolderLocation = new CommonOpenFileDialog();
-            fbdFolderLocation.InitialDirectory = @"c:\";
             fbdFolderLocation.IsFolderPicker = true;
             fbdFolderLocation.Multiselect = false;
             fbdFolderLocation.EnsurePathExists = true;
@@ -225,6 +224,7 @@ namespace WorkshopPublisherForm
 
         public string UseFileDialog(string Key, string Filter) {
             OpenFileDialog fldAddonFile = new OpenFileDialog();
+
             RegistryKey localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64);
             localKey = Registry.CurrentUser.OpenSubKey(@"Software\Shadow2hel\ShadowsPublisher\lastbrowsed");
 
@@ -235,6 +235,7 @@ namespace WorkshopPublisherForm
             else
             {
                 fldAddonFile.InitialDirectory = (string)localKey.GetValue(Key);
+                MessageBox.Show((string)localKey.GetValue(Key));
             }
 
 
@@ -418,17 +419,18 @@ namespace WorkshopPublisherForm
         private void btnUploadIcon_Click(object sender, EventArgs e)
         {   
             string output = UseFileDialog("lastUpload", "Image Files(*.JPG)|*.JPG");
-            if (output == null) { }
-            Image img = System.Drawing.Image.FromFile(output);
-            int width = img.Width;
-            int height = img.Height;
-            if (width == 512 && height == 512)
-            {
-                picBoxIconPreview.ImageLocation = output;
-                picturePath = output;
-            }
-            else {
-                MessageBox.Show("The uploaded image is not 512x512!");
+            if (output != null) { 
+                Image img = System.Drawing.Image.FromFile(output);
+                int width = img.Width;
+                int height = img.Height;
+                if (width == 512 && height == 512)
+                {
+                    picBoxIconPreview.ImageLocation = output;
+                    picturePath = output;
+                }
+                else {
+                    MessageBox.Show("The uploaded image is not 512x512!");
+                }
             }
         }
 
@@ -491,8 +493,6 @@ namespace WorkshopPublisherForm
                 string output = JsonConvert.SerializeObject(addon);
                 output = output.Replace("\\\"", "");
 
-                MessageBox.Show(output);
-
                 string SelectedRdButton;
 
                 foreach (Control button in grpboxMode.Controls)
@@ -506,7 +506,7 @@ namespace WorkshopPublisherForm
                             DataRow row = ActionQueue.NewRow();
                             switch (SelectedRdButton) {
                                 case "Create":
-                                   if(texbTitle.Text != "" && picturePath != "") { 
+                                   if(texbTitle.Text != "" && picturePath != null) { 
                                         row.SetField("Action", "Create");
                                         row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
                                         row.SetField("Status", "Waiting..");
@@ -605,6 +605,7 @@ namespace WorkshopPublisherForm
                 string Location = dr.Cells[5].Value.ToString();
                 string Status = dr.Cells[2].Value.ToString();
 
+
                 if(Status == "Waiting..") { 
                     switch (Action) {
                         case "Create":
@@ -622,12 +623,16 @@ namespace WorkshopPublisherForm
                             Gmad.StartInfo.UseShellExecute = false;
                             Gmad.StartInfo.CreateNoWindow = true;
                             Gmad.StartInfo.FileName = GmadLocation;
-                            Gmad.StartInfo.Arguments = "create -folder " + Location;
+                            Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
                             Gmad.StartInfo.RedirectStandardOutput = true;
                             Gmad.Start();
 
                             texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
+                            Gmad.WaitForExit();
+                            Gmad.Close();
+
+                            File.Delete(Location + "\\addon.json");
                             dr.Cells[2].Value = "Done";
                             break;
                         case "Create GMA":
