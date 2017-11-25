@@ -576,6 +576,11 @@ namespace WorkshopPublisherForm
         {
             
         }
+
+        private void btnQueueClear_Click(object sender, EventArgs e)
+        {
+            ActionQueue.Clear();
+        }
     }
 }
 

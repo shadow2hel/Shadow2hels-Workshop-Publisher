@@ -36,6 +36,7 @@
             this.grpboxApplyingMode = new System.Windows.Forms.GroupBox();
             this.btnAddToQueue = new System.Windows.Forms.Button();
             this.grpboxExtract = new System.Windows.Forms.GroupBox();
+            this.chkboxOutput = new System.Windows.Forms.CheckBox();
             this.btnFolderExtract = new System.Windows.Forms.Button();
             this.texbExtractOutput = new System.Windows.Forms.TextBox();
             this.btnFileExtract = new System.Windows.Forms.Button();
@@ -88,7 +89,6 @@
             this.grpboxLog = new System.Windows.Forms.GroupBox();
             this.texbLog = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.chkboxOutput = new System.Windows.Forms.CheckBox();
             this.grpboxMode.SuspendLayout();
             this.grpboxApplyingMode.SuspendLayout();
             this.grpboxExtract.SuspendLayout();
@@ -213,6 +213,16 @@
             this.grpboxExtract.TabIndex = 15;
             this.grpboxExtract.TabStop = false;
             this.grpboxExtract.Text = "Extract";
+            // 
+            // chkboxOutput
+            // 
+            this.chkboxOutput.AutoSize = true;
+            this.chkboxOutput.Location = new System.Drawing.Point(3, 48);
+            this.chkboxOutput.Name = "chkboxOutput";
+            this.chkboxOutput.Size = new System.Drawing.Size(58, 17);
+            this.chkboxOutput.TabIndex = 7;
+            this.chkboxOutput.Text = "Output";
+            this.chkboxOutput.UseVisualStyleBackColor = true;
             // 
             // btnFolderExtract
             // 
@@ -744,6 +754,7 @@
             this.btnQueueClear.TabIndex = 4;
             this.btnQueueClear.Text = "Clear";
             this.btnQueueClear.UseVisualStyleBackColor = true;
+            this.btnQueueClear.Click += new System.EventHandler(this.btnQueueClear_Click);
             // 
             // grpboxLog
             // 
@@ -777,16 +788,6 @@
             this.button1.Text = "test for queue";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // chkboxOutput
-            // 
-            this.chkboxOutput.AutoSize = true;
-            this.chkboxOutput.Location = new System.Drawing.Point(3, 48);
-            this.chkboxOutput.Name = "chkboxOutput";
-            this.chkboxOutput.Size = new System.Drawing.Size(58, 17);
-            this.chkboxOutput.TabIndex = 7;
-            this.chkboxOutput.Text = "Output";
-            this.chkboxOutput.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
