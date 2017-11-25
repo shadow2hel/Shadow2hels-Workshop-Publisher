@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Web;
+using System.Drawing;
 
 namespace WorkshopPublisherForm
 {
@@ -418,8 +419,17 @@ namespace WorkshopPublisherForm
         private void btnUploadIcon_Click(object sender, EventArgs e)
         {   
             string output = UseFileDialog("lastUpload", "Image Files(*.JPG)|*.JPG");
-            picBoxIconPreview.ImageLocation = output;
-            picturePath = output;
+            Image img = System.Drawing.Image.FromFile(output);
+            int width = img.Width;
+            int height = img.Height;
+            if (width == 512 && height == 512)
+            {
+                picBoxIconPreview.ImageLocation = output;
+                picturePath = output;
+            }
+            else {
+                MessageBox.Show("The uploaded image is not 512x512!");
+            }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
