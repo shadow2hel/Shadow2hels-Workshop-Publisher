@@ -10,6 +10,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Web;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace WorkshopPublisherForm
 {
@@ -215,10 +216,10 @@ namespace WorkshopPublisherForm
             DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
             dgvQueue.DataSource = ActionQueue;
-            dgvQueue.Columns[3].Visible = true;
-            dgvQueue.Columns[4].Visible = true;
-            dgvQueue.Columns[5].Visible = true;
-            dgvQueue.Columns[6].Visible = true;
+            dgvQueue.Columns[3].Visible = false;
+            dgvQueue.Columns[4].Visible = false;
+            dgvQueue.Columns[5].Visible = false;
+            dgvQueue.Columns[6].Visible = false;
         }
 
         public dynamic ReturnCheckedTypeRadiobutton(){
@@ -482,18 +483,6 @@ namespace WorkshopPublisherForm
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            DataRow row = ActionQueue.NewRow();
-
-            row.SetField("Action", "testing123");
-            row.SetField("Job", "testing123");
-            row.SetField("Status", "testing123");
-            row.SetField("Command", "tests galore");
-            ActionQueue.Rows.Add(row);
-        }
-
         public struct AddonJSON
         {
             public string title;
@@ -631,12 +620,6 @@ namespace WorkshopPublisherForm
                 MessageBox.Show("You didn't select a type!");
             }
 
-            // Here's some code for later
-            //string output = JsonConvert.SerializeObject(addon);
-            //output = output.Replace("\\\"", "");
-            //
-            //File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
-
         }
 
         private void btnSelectGMAOutput_Click(object sender, EventArgs e)
@@ -662,151 +645,150 @@ namespace WorkshopPublisherForm
 
         private void btnQueueExecute_Click(object sender, EventArgs e)
         {
-            Task t = Task.Run(() =>
-           {
                foreach (DataGridViewRow dr in dgvQueue.Rows)
                {
-                   string Action = dr.Cells[0].Value.ToString();
-                   string Command = dr.Cells[3].Value.ToString();
-                   string JSON = dr.Cells[4].Value.ToString();
-                   string Location = dr.Cells[5].Value.ToString();
-                   string Status = dr.Cells[2].Value.ToString();
-                   string Image = dr.Cells[6].Value.ToString();
+                        string Action = dr.Cells[0].Value.ToString();
+                        string Command = dr.Cells[3].Value.ToString();
+                        string JSON = dr.Cells[4].Value.ToString();
+                        string Location = dr.Cells[5].Value.ToString();
+                        string Status = dr.Cells[2].Value.ToString();
+                        string Image = dr.Cells[6].Value.ToString();
 
 
-                   if (Status == "Waiting..")
-                   {
-                       switch (Action)
-                       {
-                           case "Create":
-                               dr.Cells[2].Value = "Busy";
+                        if (Status == "Waiting..")
+                        {
+                            switch (Action)
+                            {
+                                case "Create":
+                                    dr.Cells[2].Value = "Busy";
 
-                               string createoutput = JsonConvert.SerializeObject(JSON);
-                               createoutput = createoutput.Replace("\\", "");
-                               createoutput = createoutput.Remove(0, 1);
-                               createoutput = createoutput.Remove(createoutput.Length - 1, 1);
+                                    string createoutput = JsonConvert.SerializeObject(JSON);
+                                    createoutput = createoutput.Replace("\\", "");
+                                    createoutput = createoutput.Remove(0, 1);
+                                    createoutput = createoutput.Remove(createoutput.Length - 1, 1);
 
-                               File.WriteAllText(Location + "\\addon.json", createoutput);
+                                    File.WriteAllText(Location + "\\addon.json", createoutput);
 
-                               var Gmad = new Process();
-                               Gmad.StartInfo.UseShellExecute = false;
-                               Gmad.StartInfo.CreateNoWindow = true;
-                               Gmad.StartInfo.FileName = GmadLocation;
-                               Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
-                               Gmad.StartInfo.RedirectStandardOutput = true;
-                               Gmad.Start();
+                                    var Gmad = new Process();
+                                    Gmad.StartInfo.UseShellExecute = false;
+                                    Gmad.StartInfo.CreateNoWindow = true;
+                                    Gmad.StartInfo.FileName = GmadLocation;
+                                    Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
+                                    Gmad.StartInfo.RedirectStandardOutput = true;
+                                    Gmad.Start();
 
-                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                               Gmad.WaitForExit();
-                               Gmad.Close();
+                                    Gmad.WaitForExit();
+                                    Gmad.Close();
 
-                               var Gmpublish = new Process();
-                               Gmpublish.StartInfo.UseShellExecute = false;
-                               Gmpublish.StartInfo.CreateNoWindow = true;
-                               Gmpublish.StartInfo.FileName = GmpublishLocation;
-                               Gmpublish.StartInfo.Arguments = "create -addon " + Location + ".gma -icon " + Image;
-                               Gmpublish.StartInfo.RedirectStandardOutput = true;
-                               Gmpublish.Start();
+                                    var Gmpublish = new Process();
+                                    Gmpublish.StartInfo.UseShellExecute = false;
+                                    Gmpublish.StartInfo.CreateNoWindow = true;
+                                    Gmpublish.StartInfo.FileName = GmpublishLocation;
+                                    Gmpublish.StartInfo.Arguments = "create -addon " + Location + ".gma -icon " + Image;
+                                    Gmpublish.StartInfo.RedirectStandardOutput = true;
+                                    Gmpublish.Start();
 
-                               texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
 
-                               Gmpublish.WaitForExit();
-                               Gmpublish.Close();
+                                    Gmpublish.WaitForExit();
+                                    Gmpublish.Close();
 
-                               File.Delete(Location + "\\addon.json");
-                               File.Delete(Location + ".gma");
-                               RefreshAddonsList();
-                               dr.Cells[2].Value = "Done";
-                               break;
-                           case "Create GMA":
-                               dr.Cells[2].Value = "Busy";
+                                    File.Delete(Location + "\\addon.json");
+                                    File.Delete(Location + ".gma");
+                                    RefreshAddonsList();
+                                    dr.Cells[2].Value = "Done";
+                                    break;
+                                case "Create GMA":
+                                    dr.Cells[2].Value = "Busy";
 
-                               string gmaoutput = JsonConvert.SerializeObject(JSON);
-                               gmaoutput = gmaoutput.Replace("\\", "");
-                               gmaoutput = gmaoutput.Remove(0, 1);
-                               gmaoutput = gmaoutput.Remove(gmaoutput.Length - 1, 1);
+                                    string gmaoutput = JsonConvert.SerializeObject(JSON);
+                                    gmaoutput = gmaoutput.Replace("\\", "");
+                                    gmaoutput = gmaoutput.Remove(0, 1);
+                                    gmaoutput = gmaoutput.Remove(gmaoutput.Length - 1, 1);
 
-                               File.WriteAllText(Location + "\\addon.json", gmaoutput);
+                                    File.WriteAllText(Location + "\\addon.json", gmaoutput);
 
-                               Gmad = new Process();
-                               Gmad.StartInfo.UseShellExecute = false;
-                               Gmad.StartInfo.CreateNoWindow = true;
-                               Gmad.StartInfo.FileName = GmadLocation;
-                               Gmad.StartInfo.Arguments = Command;
-                               Gmad.StartInfo.RedirectStandardOutput = true;
-                               Gmad.Start();
+                                    Gmad = new Process();
+                                    Gmad.StartInfo.UseShellExecute = false;
+                                    Gmad.StartInfo.CreateNoWindow = true;
+                                    Gmad.StartInfo.FileName = GmadLocation;
+                                    Gmad.StartInfo.Arguments = Command;
+                                    Gmad.StartInfo.RedirectStandardOutput = true;
+                                    Gmad.Start();
 
-                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                               Gmad.WaitForExit();
-                               Gmad.Close();
+                                    Gmad.WaitForExit();
+                                    Gmad.Close();
 
-                               dr.Cells[2].Value = "Done";
-                               break;
-                           case "Update":
-                               dr.Cells[2].Value = "Busy";
+                                    dr.Cells[2].Value = "Done";
+                                    break;
+                                case "Update":
+                                    dr.Cells[2].Value = "Busy";
 
-                               string updateoutput = JsonConvert.SerializeObject(JSON);
-                               updateoutput = updateoutput.Replace("\\", "");
-                               updateoutput = updateoutput.Remove(0, 1);
-                               updateoutput = updateoutput.Remove(updateoutput.Length - 1, 1);
+                                    string updateoutput = JsonConvert.SerializeObject(JSON);
+                                    updateoutput = updateoutput.Replace("\\", "");
+                                    updateoutput = updateoutput.Remove(0, 1);
+                                    updateoutput = updateoutput.Remove(updateoutput.Length - 1, 1);
 
-                               File.WriteAllText(Location + "\\addon.json", updateoutput);
+                                    File.WriteAllText(Location + "\\addon.json", updateoutput);
 
-                               Gmad = new Process();
-                               Gmad.StartInfo.UseShellExecute = false;
-                               Gmad.StartInfo.CreateNoWindow = true;
-                               Gmad.StartInfo.FileName = GmadLocation;
-                               Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
-                               Gmad.StartInfo.RedirectStandardOutput = true;
-                               Gmad.Start();
+                                    Gmad = new Process();
+                                    Gmad.StartInfo.UseShellExecute = false;
+                                    Gmad.StartInfo.CreateNoWindow = true;
+                                    Gmad.StartInfo.FileName = GmadLocation;
+                                    Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
+                                    Gmad.StartInfo.RedirectStandardOutput = true;
+                                    Gmad.Start();
 
-                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                               Gmad.WaitForExit();
-                               Gmad.Close();
+                                    Gmad.WaitForExit();
+                                    Gmad.Close();
 
-                               Gmpublish = new Process();
-                               Gmpublish.StartInfo.UseShellExecute = false;
-                               Gmpublish.StartInfo.CreateNoWindow = true;
-                               Gmpublish.StartInfo.FileName = GmpublishLocation;
-                               Gmpublish.StartInfo.Arguments = Command;
-                               Gmpublish.StartInfo.RedirectStandardOutput = true;
-                               Gmpublish.Start();
+                                    Gmpublish = new Process();
+                                    Gmpublish.StartInfo.UseShellExecute = false;
+                                    Gmpublish.StartInfo.CreateNoWindow = true;
+                                    Gmpublish.StartInfo.FileName = GmpublishLocation;
+                                    Gmpublish.StartInfo.Arguments = Command;
+                                    Gmpublish.StartInfo.RedirectStandardOutput = true;
+                                    Gmpublish.Start();
 
-                               texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
 
-                               Gmpublish.WaitForExit();
-                               Gmpublish.Close();
+                                    Gmpublish.WaitForExit();
+                                    Gmpublish.Close();
 
-                               File.Delete(Location + "\\addon.json");
-                               File.Delete(Location + ".gma");
-                               RefreshAddonsList();
-                               dr.Cells[2].Value = "Done";
-                               break;
-                           case "Extract":
-                               Gmad = new Process();
-                               Gmad.StartInfo.UseShellExecute = false;
-                               Gmad.StartInfo.CreateNoWindow = true;
-                               Gmad.StartInfo.FileName = GmadLocation;
-                               Gmad.StartInfo.Arguments = Command;
-                               Gmad.StartInfo.RedirectStandardOutput = true;
-                               Gmad.Start();
+                                    File.Delete(Location + "\\addon.json");
+                                    File.Delete(Location + ".gma");
+                                    RefreshAddonsList();
+                                    dr.Cells[2].Value = "Done";
+                                    break;
+                                case "Extract":
+                                    Gmad = new Process();
+                                    Gmad.StartInfo.UseShellExecute = false;
+                                    Gmad.StartInfo.CreateNoWindow = true;
+                                    Gmad.StartInfo.FileName = GmadLocation;
+                                    Gmad.StartInfo.Arguments = Command;
+                                    Gmad.StartInfo.RedirectStandardOutput = true;
+                                    Gmad.Start();
 
-                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                               Gmad.WaitForExit();
-                               Gmad.Close();
+                                    Gmad.WaitForExit();
+                                    Gmad.Close();
 
-                               dr.Cells[2].Value = "Done";
-                               break;
-                       }
-                   }
+                                    dr.Cells[2].Value = "Done";
+                                    break;
+                            }
+                             Thread.Sleep(500);
+                        }
+                
+            }
+            
 
-               }
-           });
-            t.Wait(500);  
         }
 
         private void btnQueueClear_Click(object sender, EventArgs e)
