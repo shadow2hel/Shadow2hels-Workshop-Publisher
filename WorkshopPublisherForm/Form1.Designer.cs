@@ -36,6 +36,7 @@
             this.grpboxApplyingMode = new System.Windows.Forms.GroupBox();
             this.btnAddToQueue = new System.Windows.Forms.Button();
             this.grpboxExtract = new System.Windows.Forms.GroupBox();
+            this.chkboxOutput = new System.Windows.Forms.CheckBox();
             this.btnFolderExtract = new System.Windows.Forms.Button();
             this.texbExtractOutput = new System.Windows.Forms.TextBox();
             this.btnFileExtract = new System.Windows.Forms.Button();
@@ -88,7 +89,6 @@
             this.grpboxLog = new System.Windows.Forms.GroupBox();
             this.texbLog = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.chkboxOutput = new System.Windows.Forms.CheckBox();
             this.grpboxMode.SuspendLayout();
             this.grpboxApplyingMode.SuspendLayout();
             this.grpboxExtract.SuspendLayout();
@@ -213,6 +213,16 @@
             this.grpboxExtract.TabIndex = 15;
             this.grpboxExtract.TabStop = false;
             this.grpboxExtract.Text = "Extract";
+            // 
+            // chkboxOutput
+            // 
+            this.chkboxOutput.AutoSize = true;
+            this.chkboxOutput.Location = new System.Drawing.Point(3, 48);
+            this.chkboxOutput.Name = "chkboxOutput";
+            this.chkboxOutput.Size = new System.Drawing.Size(58, 17);
+            this.chkboxOutput.TabIndex = 7;
+            this.chkboxOutput.Text = "Output";
+            this.chkboxOutput.UseVisualStyleBackColor = true;
             // 
             // btnFolderExtract
             // 
@@ -380,6 +390,7 @@
             this.chkboxBuild.Tag = "build";
             this.chkboxBuild.Text = "Build";
             this.chkboxBuild.UseVisualStyleBackColor = true;
+            this.chkboxBuild.CheckedChanged += new System.EventHandler(this.chkboxBuild_CheckedChanged);
             // 
             // chkboxComic
             // 
@@ -391,6 +402,7 @@
             this.chkboxComic.Tag = "comic";
             this.chkboxComic.Text = "Comic";
             this.chkboxComic.UseVisualStyleBackColor = true;
+            this.chkboxComic.CheckedChanged += new System.EventHandler(this.chkboxComic_CheckedChanged);
             // 
             // chkboxWater
             // 
@@ -402,6 +414,7 @@
             this.chkboxWater.Tag = "water";
             this.chkboxWater.Text = "Water";
             this.chkboxWater.UseVisualStyleBackColor = true;
+            this.chkboxWater.CheckedChanged += new System.EventHandler(this.chkboxWater_CheckedChanged);
             // 
             // chkboxCartoon
             // 
@@ -413,6 +426,7 @@
             this.chkboxCartoon.Tag = "cartoon";
             this.chkboxCartoon.Text = "Cartoon";
             this.chkboxCartoon.UseVisualStyleBackColor = true;
+            this.chkboxCartoon.CheckedChanged += new System.EventHandler(this.chkboxCartoon_CheckedChanged);
             // 
             // chkboxRealism
             // 
@@ -424,6 +438,7 @@
             this.chkboxRealism.Tag = "realism";
             this.chkboxRealism.Text = "Realism";
             this.chkboxRealism.UseVisualStyleBackColor = true;
+            this.chkboxRealism.CheckedChanged += new System.EventHandler(this.chkboxRealism_CheckedChanged);
             // 
             // chkboxMovie
             // 
@@ -435,6 +450,7 @@
             this.chkboxMovie.Tag = "movie";
             this.chkboxMovie.Text = "Movie";
             this.chkboxMovie.UseVisualStyleBackColor = true;
+            this.chkboxMovie.CheckedChanged += new System.EventHandler(this.chkboxMovie_CheckedChanged);
             // 
             // chkboxScenic
             // 
@@ -446,6 +462,7 @@
             this.chkboxScenic.Tag = "scenic";
             this.chkboxScenic.Text = "Scenic";
             this.chkboxScenic.UseVisualStyleBackColor = true;
+            this.chkboxScenic.CheckedChanged += new System.EventHandler(this.chkboxScenic_CheckedChanged);
             // 
             // chkboxRoleplay
             // 
@@ -457,6 +474,7 @@
             this.chkboxRoleplay.Tag = "roleplay";
             this.chkboxRoleplay.Text = "Roleplay";
             this.chkboxRoleplay.UseVisualStyleBackColor = true;
+            this.chkboxRoleplay.CheckedChanged += new System.EventHandler(this.chkboxRoleplay_CheckedChanged);
             // 
             // chkboxFun
             // 
@@ -468,6 +486,7 @@
             this.chkboxFun.Tag = "fun";
             this.chkboxFun.Text = "Fun";
             this.chkboxFun.UseVisualStyleBackColor = true;
+            this.chkboxFun.CheckedChanged += new System.EventHandler(this.chkboxFun_CheckedChanged);
             // 
             // grpboxType
             // 
@@ -744,6 +763,7 @@
             this.btnQueueClear.TabIndex = 4;
             this.btnQueueClear.Text = "Clear";
             this.btnQueueClear.UseVisualStyleBackColor = true;
+            this.btnQueueClear.Click += new System.EventHandler(this.btnQueueClear_Click);
             // 
             // grpboxLog
             // 
@@ -777,16 +797,6 @@
             this.button1.Text = "test for queue";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // chkboxOutput
-            // 
-            this.chkboxOutput.AutoSize = true;
-            this.chkboxOutput.Location = new System.Drawing.Point(3, 48);
-            this.chkboxOutput.Name = "chkboxOutput";
-            this.chkboxOutput.Size = new System.Drawing.Size(58, 17);
-            this.chkboxOutput.TabIndex = 7;
-            this.chkboxOutput.Text = "Output";
-            this.chkboxOutput.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
