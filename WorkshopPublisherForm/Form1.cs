@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Web;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace WorkshopPublisherForm
 {
@@ -507,114 +508,128 @@ namespace WorkshopPublisherForm
         {
             AddonJSON addon = new AddonJSON();
             addon.title = texbTitle.Text;
-            if(ReturnCheckedTypeRadiobutton() != null) { 
+            if (ReturnCheckedTypeRadiobutton() != null) {
                 addon.type = (string)ReturnCheckedTypeRadiobutton().Tag;
 
-                    //Adding the tags
-                    ArrayList ALTags = new ArrayList();
-                    int i = 0;
-                    foreach (Control button in grpboxTags.Controls)
+                //Adding the tags
+                ArrayList ALTags = new ArrayList();
+                int i = 0;
+                foreach (Control button in grpboxTags.Controls)
+                {
+                    if (button is CheckBox)
                     {
-                        if (button is CheckBox)
+                        if (((CheckBox)button).Checked == true)
                         {
-                            if (((CheckBox)button).Checked == true)
-                            {
-                                ALTags.Insert(i, (string)((CheckBox)button).Tag);
-                                i++;
-                            }
+                            ALTags.Insert(i, (string)((CheckBox)button).Tag);
+                            i++;
                         }
                     }
+                }
 
-                    addon.tags = ALTags;
+                addon.tags = ALTags;
 
-                    ArrayList ALIgnoreExt = new ArrayList();
-                    string[] ArrIgnoreExt = texbIgnore.Text.Split(',');
-                    ALIgnoreExt.AddRange(ArrIgnoreExt);
-                    ALIgnoreExt.Remove("\\\"");
+                ArrayList ALIgnoreExt = new ArrayList();
+                string[] ArrIgnoreExt = texbIgnore.Text.Split(',');
+                ALIgnoreExt.AddRange(ArrIgnoreExt);
+                ALIgnoreExt.Remove("\\\"");
 
-                    addon.ignore = ALIgnoreExt;
+                addon.ignore = ALIgnoreExt;
 
-                    // Here's some code for later
-                    string output = JsonConvert.SerializeObject(addon);
-                    output = output.Replace("\\\"", "");
+                // Here's some code for later
+                string output = JsonConvert.SerializeObject(addon);
+                output = output.Replace("\\\"", "");
 
-                    string SelectedRdButton;
+                string SelectedRdButton;
 
-                    foreach (Control button in grpboxMode.Controls)
+                foreach (Control button in grpboxMode.Controls)
+                {
+                    if (button is RadioButton)
                     {
-                        if (button is RadioButton)
+                        if (((RadioButton)button).Checked == true)
                         {
-                            if (((RadioButton)button).Checked == true)
-                            {
-                                SelectedRdButton = ((RadioButton)button).Text;
+                            SelectedRdButton = ((RadioButton)button).Text;
 
-                                DataRow row = ActionQueue.NewRow();
-                                switch (SelectedRdButton) {
-                                    case "Create":
-                                       if(texbTitle.Text != "" && picturePath != null) { 
-                                            row.SetField("Action", "Create");
-                                            row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
-                                            row.SetField("Status", "Waiting..");
-                                            row.SetField("Command", "create -addon " + texbFileorFolder + ".gma" + " -icon" + picturePath );
-                                            row.SetField("JSON", output);
-                                            row.SetField("Location", texbFileorFolder.Text);
-                                            row.SetField("Image", picturePath);
-                                            ActionQueue.Rows.Add(row);
-                                        } else {
-                                            MessageBox.Show("You don't have a title or a picture!");
-                                        }
-                                        break;
-                                    case "Create GMA":
-                                        if (texbTitle.Text != "" && texbGMAOutput.Text != "")
-                                        {
-                                            row.SetField("Action", "Create GMA");
-                                            row.SetField("Job", "Creating .gma from " + texbGMAOutput.Text);
-                                            row.SetField("Status", "Waiting..");
-                                            row.SetField("Command", "create -folder " + texbFileorFolder.Text + " -out " + texbGMAOutput.Text);
-                                            row.SetField("Location", texbFileorFolder.Text);
-                                            row.SetField("JSON", output);
-                                            ActionQueue.Rows.Add(row);
-                                        }
-                                        else {
-                                            MessageBox.Show("You don't have a title or you didn't select a GMA output!");
-                                        }
-                                        break;
-                                    case "Update":
-                                        if (texbTitle.Text != "")
-                                        {
-                                            row.SetField("Action", "Update");
-                                            row.SetField("Job", "Updating addon " + texbTitle.Text);
-                                            row.SetField("Status", "Waiting..");
-                                            row.SetField("Command", "update -addon " + texbFileorFolder.Text + ".gma" + " -id " + AddonID);
-                                            row.SetField("JSON", output);
-                                            row.SetField("Location", texbFileorFolder.Text);
-                                            ActionQueue.Rows.Add(row);
-                                        } else
-                                        {
-                                            MessageBox.Show("You don't have a title!");
-                                        }
-                                        break;
-                                    case "Extract":
-                                        row.SetField("Action", "Extract");
-                                        row.SetField("Job", "Extracting addon " + texbFileorFolder.Text);
+                            DataRow row = ActionQueue.NewRow();
+                            switch (SelectedRdButton) {
+                                case "Create":
+                                    if (texbTitle.Text != "" && picturePath != null) {
+                                        row.SetField("Action", "Create");
+                                        row.SetField("Job", "Creating addon from " + texbFileorFolder.Text);
                                         row.SetField("Status", "Waiting..");
-                                        if (chkboxOutput.Checked == false)
-                                        {
-                                            row.SetField("Command", "extract -file " + texbFileorFolder);
-                                        }
-                                        else {
-                                            row.SetField("Command", "extract -file " + texbFileorFolder + " -out " + texbExtractOutput.Text);
-                                        }
+                                        row.SetField("Command", "create -addon " + texbFileorFolder + ".gma" + " -icon" + picturePath);
+                                        row.SetField("JSON", output);
+                                        row.SetField("Location", texbFileorFolder.Text);
+                                        row.SetField("Image", picturePath);
                                         ActionQueue.Rows.Add(row);
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                    } else {
+                                        MessageBox.Show("You don't have a title or a picture!");
+                                    }
+                                    break;
+                                case "Create GMA":
+                                    if (texbTitle.Text != "" && texbGMAOutput.Text != "")
+                                    {
+                                        row.SetField("Action", "Create GMA");
+                                        row.SetField("Job", "Creating .gma from " + texbGMAOutput.Text);
+                                        row.SetField("Status", "Waiting..");
+                                        row.SetField("Command", "create -folder " + texbFileorFolder.Text + " -out " + texbGMAOutput.Text);
+                                        row.SetField("Location", texbFileorFolder.Text);
+                                        row.SetField("JSON", output);
+                                        ActionQueue.Rows.Add(row);
+                                    }
+                                    else {
+                                        MessageBox.Show("You don't have a title or you didn't select a GMA output!");
+                                    }
+                                    break;
+                                case "Update":
+                                    if (texbTitle.Text != "")
+                                    {
+                                        row.SetField("Action", "Update");
+                                        row.SetField("Job", "Updating addon " + texbTitle.Text);
+                                        row.SetField("Status", "Waiting..");
+                                        row.SetField("Command", "update -addon " + texbFileorFolder.Text + ".gma" + " -id " + AddonID);
+                                        row.SetField("JSON", output);
+                                        row.SetField("Location", texbFileorFolder.Text);
+                                        ActionQueue.Rows.Add(row);
+                                    } else
+                                    {
+                                        MessageBox.Show("You don't have a title!");
+                                    }
+                                    break;
+                                case "Extract":
+                                    row.SetField("Action", "Extract");
+                                    row.SetField("Job", "Extracting addon " + texbFileorFolder.Text);
+                                    row.SetField("Status", "Waiting..");
+                                    if (chkboxOutput.Checked == false)
+                                    {
+                                        row.SetField("Command", "extract -file " + texbFileExtract.Text);
+                                    }
+                                    else {
+                                        row.SetField("Command", "extract -file " + texbFileExtract.Text + " -out " + texbExtractOutput.Text);
+                                    }
+                                    ActionQueue.Rows.Add(row);
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                     }
-            } else
+                }
+            } else if (rdbtnExtract.Checked == true)
             {
+                DataRow row = ActionQueue.NewRow();
+                row.SetField("Action", "Extract");
+                row.SetField("Job", "Extracting addon " + texbFileExtract.Text);
+                row.SetField("Status", "Waiting..");
+                if (chkboxOutput.Checked == false)
+                {
+                    row.SetField("Command", "extract -file " + texbFileExtract.Text);
+                }
+                else
+                {
+                    row.SetField("Command", "extract -file " + texbFileExtract.Text + " -out " + texbExtractOutput.Text);
+                }
+                ActionQueue.Rows.Add(row);
+            } else {
                 MessageBox.Show("You didn't select a type!");
             }
 
@@ -649,133 +664,154 @@ namespace WorkshopPublisherForm
 
         private void btnQueueExecute_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow dr in dgvQueue.Rows) {
-                string Action = dr.Cells[0].Value.ToString();
-                string Command = dr.Cells[3].Value.ToString();
-                string JSON = dr.Cells[4].Value.ToString();
-                string Location = dr.Cells[5].Value.ToString();
-                string Status = dr.Cells[2].Value.ToString();
-                string Image = dr.Cells[6].Value.ToString();
+            Task t = Task.Run(() =>
+           {
+               foreach (DataGridViewRow dr in dgvQueue.Rows)
+               {
+                   string Action = dr.Cells[0].Value.ToString();
+                   string Command = dr.Cells[3].Value.ToString();
+                   string JSON = dr.Cells[4].Value.ToString();
+                   string Location = dr.Cells[5].Value.ToString();
+                   string Status = dr.Cells[2].Value.ToString();
+                   string Image = dr.Cells[6].Value.ToString();
 
 
-                if(Status == "Waiting..") { 
-                    switch (Action) {
-                        case "Create":
-                            dr.Cells[2].Value = "Busy";
+                   if (Status == "Waiting..")
+                   {
+                       switch (Action)
+                       {
+                           case "Create":
+                               dr.Cells[2].Value = "Busy";
 
-                            string createoutput = JsonConvert.SerializeObject(JSON);
-                            createoutput = createoutput.Replace("\\", "");
-                            createoutput = createoutput.Remove(0, 1);
-                            createoutput = createoutput.Remove(createoutput.Length - 1, 1);
-                            MessageBox.Show(Location);
-                        
-                            File.WriteAllText(Location + "\\addon.json", createoutput);
+                               string createoutput = JsonConvert.SerializeObject(JSON);
+                               createoutput = createoutput.Replace("\\", "");
+                               createoutput = createoutput.Remove(0, 1);
+                               createoutput = createoutput.Remove(createoutput.Length - 1, 1);
+                               MessageBox.Show(Location);
 
-                            var Gmad = new Process();
-                            Gmad.StartInfo.UseShellExecute = false;
-                            Gmad.StartInfo.CreateNoWindow = true;
-                            Gmad.StartInfo.FileName = GmadLocation;
-                            Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
-                            Gmad.StartInfo.RedirectStandardOutput = true;
-                            Gmad.Start();
+                               File.WriteAllText(Location + "\\addon.json", createoutput);
 
-                            texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                               var Gmad = new Process();
+                               Gmad.StartInfo.UseShellExecute = false;
+                               Gmad.StartInfo.CreateNoWindow = true;
+                               Gmad.StartInfo.FileName = GmadLocation;
+                               Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
+                               Gmad.StartInfo.RedirectStandardOutput = true;
+                               Gmad.Start();
 
-                            Gmad.WaitForExit();
-                            Gmad.Close();
+                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                            var Gmpublish = new Process();
-                            Gmpublish.StartInfo.UseShellExecute = false;
-                            Gmpublish.StartInfo.CreateNoWindow = true;
-                            Gmpublish.StartInfo.FileName = GmpublishLocation;
-                            Gmpublish.StartInfo.Arguments = "create -addon " + Location + ".gma -icon " + Image;
-                            Gmpublish.StartInfo.RedirectStandardOutput = true;
-                            Gmpublish.Start();
+                               Gmad.WaitForExit();
+                               Gmad.Close();
 
-                            texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+                               var Gmpublish = new Process();
+                               Gmpublish.StartInfo.UseShellExecute = false;
+                               Gmpublish.StartInfo.CreateNoWindow = true;
+                               Gmpublish.StartInfo.FileName = GmpublishLocation;
+                               Gmpublish.StartInfo.Arguments = "create -addon " + Location + ".gma -icon " + Image;
+                               Gmpublish.StartInfo.RedirectStandardOutput = true;
+                               Gmpublish.Start();
 
-                            Gmpublish.WaitForExit();
-                            Gmpublish.Close();
+                               texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
 
-                            File.Delete(Location + "\\addon.json");
-                            File.Delete(Location + ".gma");
-                            RefreshAddonsList();
-                            dr.Cells[2].Value = "Done";
-                            break;
-                        case "Create GMA":
-                            dr.Cells[2].Value = "Busy";
+                               Gmpublish.WaitForExit();
+                               Gmpublish.Close();
 
-                            string gmaoutput = JsonConvert.SerializeObject(JSON);
-                            gmaoutput = gmaoutput.Replace("\\", "");
-                            gmaoutput = gmaoutput.Remove(0, 1);
-                            gmaoutput = gmaoutput.Remove(gmaoutput.Length - 1, 1);
-                            MessageBox.Show(Location);
+                               File.Delete(Location + "\\addon.json");
+                               File.Delete(Location + ".gma");
+                               RefreshAddonsList();
+                               dr.Cells[2].Value = "Done";
+                               break;
+                           case "Create GMA":
+                               dr.Cells[2].Value = "Busy";
 
-                            File.WriteAllText(Location + "\\addon.json", gmaoutput);
+                               string gmaoutput = JsonConvert.SerializeObject(JSON);
+                               gmaoutput = gmaoutput.Replace("\\", "");
+                               gmaoutput = gmaoutput.Remove(0, 1);
+                               gmaoutput = gmaoutput.Remove(gmaoutput.Length - 1, 1);
+                               MessageBox.Show(Location);
 
-                            Gmad = new Process();
-                            Gmad.StartInfo.UseShellExecute = false;
-                            Gmad.StartInfo.CreateNoWindow = true;
-                            Gmad.StartInfo.FileName = GmadLocation;
-                            Gmad.StartInfo.Arguments = Command;
-                            Gmad.StartInfo.RedirectStandardOutput = true;
-                            Gmad.Start();
+                               File.WriteAllText(Location + "\\addon.json", gmaoutput);
 
-                            texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                               Gmad = new Process();
+                               Gmad.StartInfo.UseShellExecute = false;
+                               Gmad.StartInfo.CreateNoWindow = true;
+                               Gmad.StartInfo.FileName = GmadLocation;
+                               Gmad.StartInfo.Arguments = Command;
+                               Gmad.StartInfo.RedirectStandardOutput = true;
+                               Gmad.Start();
 
-                            Gmad.WaitForExit();
-                            Gmad.Close();
-                            
-                            dr.Cells[2].Value = "Done";
-                            break;
-                        case "Update":
-                            dr.Cells[2].Value = "Busy";
+                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                            string updateoutput = JsonConvert.SerializeObject(JSON);
-                            updateoutput = updateoutput.Replace("\\", "");
-                            updateoutput = updateoutput.Remove(0, 1);
-                            updateoutput = updateoutput.Remove(updateoutput.Length - 1, 1);
-                            MessageBox.Show(Location);
+                               Gmad.WaitForExit();
+                               Gmad.Close();
 
-                            File.WriteAllText(Location + "\\addon.json", updateoutput);
+                               dr.Cells[2].Value = "Done";
+                               break;
+                           case "Update":
+                               dr.Cells[2].Value = "Busy";
 
-                            Gmad = new Process();
-                            Gmad.StartInfo.UseShellExecute = false;
-                            Gmad.StartInfo.CreateNoWindow = true;
-                            Gmad.StartInfo.FileName = GmadLocation;
-                            Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
-                            Gmad.StartInfo.RedirectStandardOutput = true;
-                            Gmad.Start();
+                               string updateoutput = JsonConvert.SerializeObject(JSON);
+                               updateoutput = updateoutput.Replace("\\", "");
+                               updateoutput = updateoutput.Remove(0, 1);
+                               updateoutput = updateoutput.Remove(updateoutput.Length - 1, 1);
+                               MessageBox.Show(Location);
 
-                            texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+                               File.WriteAllText(Location + "\\addon.json", updateoutput);
 
-                            Gmad.WaitForExit();
-                            Gmad.Close();
+                               Gmad = new Process();
+                               Gmad.StartInfo.UseShellExecute = false;
+                               Gmad.StartInfo.CreateNoWindow = true;
+                               Gmad.StartInfo.FileName = GmadLocation;
+                               Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
+                               Gmad.StartInfo.RedirectStandardOutput = true;
+                               Gmad.Start();
 
-                            Gmpublish = new Process();
-                            Gmpublish.StartInfo.UseShellExecute = false;
-                            Gmpublish.StartInfo.CreateNoWindow = true;
-                            Gmpublish.StartInfo.FileName = GmpublishLocation;
-                            Gmpublish.StartInfo.Arguments = Command;
-                            Gmpublish.StartInfo.RedirectStandardOutput = true;
-                            Gmpublish.Start();
+                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
 
-                            texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+                               Gmad.WaitForExit();
+                               Gmad.Close();
 
-                            Gmpublish.WaitForExit();
-                            Gmpublish.Close();
+                               Gmpublish = new Process();
+                               Gmpublish.StartInfo.UseShellExecute = false;
+                               Gmpublish.StartInfo.CreateNoWindow = true;
+                               Gmpublish.StartInfo.FileName = GmpublishLocation;
+                               Gmpublish.StartInfo.Arguments = Command;
+                               Gmpublish.StartInfo.RedirectStandardOutput = true;
+                               Gmpublish.Start();
 
-                            File.Delete(Location + "\\addon.json");
-                            File.Delete(Location + ".gma");
-                            RefreshAddonsList();
-                            dr.Cells[2].Value = "Done";
-                            break;
-                        case "Extract":
-                            MessageBox.Show("Extracting");
-                            break;
-                    }
-                }
-            }
+                               texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+
+                               Gmpublish.WaitForExit();
+                               Gmpublish.Close();
+
+                               File.Delete(Location + "\\addon.json");
+                               File.Delete(Location + ".gma");
+                               RefreshAddonsList();
+                               dr.Cells[2].Value = "Done";
+                               break;
+                           case "Extract":
+                               Gmad = new Process();
+                               Gmad.StartInfo.UseShellExecute = false;
+                               Gmad.StartInfo.CreateNoWindow = true;
+                               Gmad.StartInfo.FileName = GmadLocation;
+                               Gmad.StartInfo.Arguments = Command;
+                               Gmad.StartInfo.RedirectStandardOutput = true;
+                               Gmad.Start();
+
+                               texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
+
+                               Gmad.WaitForExit();
+                               Gmad.Close();
+
+                               dr.Cells[2].Value = "Done";
+                               break;
+                       }
+                   }
+
+               }
+           });
+            t.Wait(500);  
         }
 
         private void btnQueueClear_Click(object sender, EventArgs e)
