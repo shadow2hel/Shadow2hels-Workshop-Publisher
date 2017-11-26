@@ -278,7 +278,6 @@ namespace WorkshopPublisherForm
             else
             {
                 fldAddonFile.InitialDirectory = (string)localKey.GetValue(Key);
-                MessageBox.Show((string)localKey.GetValue(Key));
             }
 
 
@@ -290,7 +289,6 @@ namespace WorkshopPublisherForm
                 {
                     localKey = Registry.CurrentUser.CreateSubKey(@"Software\Shadow2hel\ShadowsPublisher\lastbrowsed");
                     string path = Path.GetDirectoryName(fldAddonFile.FileName);
-                    MessageBox.Show(path);
                     localKey.SetValue(Key, path);
                     return fldAddonFile.FileName;
                 }
@@ -687,7 +685,6 @@ namespace WorkshopPublisherForm
                                createoutput = createoutput.Replace("\\", "");
                                createoutput = createoutput.Remove(0, 1);
                                createoutput = createoutput.Remove(createoutput.Length - 1, 1);
-                               MessageBox.Show(Location);
 
                                File.WriteAllText(Location + "\\addon.json", createoutput);
 
@@ -729,7 +726,6 @@ namespace WorkshopPublisherForm
                                gmaoutput = gmaoutput.Replace("\\", "");
                                gmaoutput = gmaoutput.Remove(0, 1);
                                gmaoutput = gmaoutput.Remove(gmaoutput.Length - 1, 1);
-                               MessageBox.Show(Location);
 
                                File.WriteAllText(Location + "\\addon.json", gmaoutput);
 
@@ -755,7 +751,6 @@ namespace WorkshopPublisherForm
                                updateoutput = updateoutput.Replace("\\", "");
                                updateoutput = updateoutput.Remove(0, 1);
                                updateoutput = updateoutput.Remove(updateoutput.Length - 1, 1);
-                               MessageBox.Show(Location);
 
                                File.WriteAllText(Location + "\\addon.json", updateoutput);
 
