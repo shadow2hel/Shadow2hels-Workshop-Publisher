@@ -216,10 +216,10 @@ namespace WorkshopPublisherForm
             DataColumn colImage = ActionQueue.Columns.Add("Image", typeof(string));
 
             dgvQueue.DataSource = ActionQueue;
-            dgvQueue.Columns[3].Visible = true;
-            dgvQueue.Columns[4].Visible = true;
-            dgvQueue.Columns[5].Visible = true;
-            dgvQueue.Columns[6].Visible = true;
+            dgvQueue.Columns[3].Visible = false;
+            dgvQueue.Columns[4].Visible = false;
+            dgvQueue.Columns[5].Visible = false;
+            dgvQueue.Columns[6].Visible = false;
         }
 
         public dynamic ReturnCheckedTypeRadiobutton(){
@@ -483,18 +483,6 @@ namespace WorkshopPublisherForm
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            DataRow row = ActionQueue.NewRow();
-
-            row.SetField("Action", "testing123");
-            row.SetField("Job", "testing123");
-            row.SetField("Status", "testing123");
-            row.SetField("Command", "tests galore");
-            ActionQueue.Rows.Add(row);
-        }
-
         public struct AddonJSON
         {
             public string title;
@@ -631,12 +619,6 @@ namespace WorkshopPublisherForm
             } else {
                 MessageBox.Show("You didn't select a type!");
             }
-
-            // Here's some code for later
-            //string output = JsonConvert.SerializeObject(addon);
-            //output = output.Replace("\\\"", "");
-            //
-            //File.WriteAllText(@"D:\Users\antonio\Documents\Addons\addon.json", output);
 
         }
 

@@ -88,7 +88,6 @@
             this.btnQueueClear = new System.Windows.Forms.Button();
             this.grpboxLog = new System.Windows.Forms.GroupBox();
             this.texbLog = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.grpboxMode.SuspendLayout();
             this.grpboxApplyingMode.SuspendLayout();
             this.grpboxExtract.SuspendLayout();
@@ -788,22 +787,11 @@
             this.texbLog.Size = new System.Drawing.Size(608, 274);
             this.texbLog.TabIndex = 0;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(772, 314);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(164, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "test for queue";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1258, 713);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.grpboxLog);
             this.Controls.Add(this.grpboxQueue);
             this.Controls.Add(this.grpboxApplyingMode);
@@ -894,7 +882,6 @@
         private System.Windows.Forms.TextBox texbLog;
         private System.Windows.Forms.Button btnQueueExecute;
         private System.Windows.Forms.Button btnQueueClear;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnAddToQueue;
         private System.Windows.Forms.CheckBox chkboxOutput;
     }
