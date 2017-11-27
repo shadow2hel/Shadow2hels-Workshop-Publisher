@@ -11,6 +11,7 @@ using System.Web;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Threading;
+using System.ComponentModel;
 
 namespace WorkshopPublisherForm
 {
@@ -57,6 +58,10 @@ namespace WorkshopPublisherForm
                         row.SetField(WSAddons.Columns[2], split[3]);
 
                         WSAddons.Rows.Add(row);
+
+                        DataGridViewColumn column = dgvAddonsList.Columns["Name"];
+                        ListSortDirection direction = ListSortDirection.Ascending;
+                        dgvAddonsList.Sort(column, direction);
                     }
                 }
                 Gmpublish.WaitForExit();
@@ -205,7 +210,9 @@ namespace WorkshopPublisherForm
             }
 
             dgvAddonsList.DataSource = WSAddons;
-
+            DataGridViewColumn column = dgvAddonsList.Columns["Name"];
+            ListSortDirection direction = ListSortDirection.Ascending;
+            dgvAddonsList.Sort(column, direction);
             
             DataColumn colAction = ActionQueue.Columns.Add("Action", typeof(string));
             DataColumn colJob = ActionQueue.Columns.Add("Job", typeof(string));
