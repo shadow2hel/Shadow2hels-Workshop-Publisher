@@ -457,8 +457,6 @@ namespace WorkshopPublisherForm
             grpboxExtract.Enabled = !rdbtnUpdate.Checked;
 
             lblIcon.Enabled = !rdbtnUpdate.Checked;
-            btnUploadIcon.Enabled = !rdbtnUpdate.Checked;
-            grpboxIconPreview.Enabled = !rdbtnUpdate.Checked;
 
             picBoxIconPreview.ImageLocation = "";
         }
@@ -615,7 +613,13 @@ namespace WorkshopPublisherForm
                                         row.SetField("Action", "Update");
                                         row.SetField("Job", "Updating addon " + texbTitle.Text);
                                         row.SetField("Status", "Waiting..");
-                                        row.SetField("Command", "update -addon " + texbFileorFolder.Text + ".gma" + " -id " + AddonID);
+                                        if (picturePath == null)
+                                        {
+                                            row.SetField("Command", "update -addon " + texbFileorFolder.Text + ".gma" + " -id " + AddonID);
+                                        } else
+                                        {
+                                            row.SetField("Command", "update -addon " + texbFileorFolder.Text + ".gma" + " -id " + AddonID + " -icon " + picturePath);
+                                        }
                                         row.SetField("JSON", output);
                                         row.SetField("Location", texbFileorFolder.Text);
                                         ActionQueue.Rows.Add(row);
