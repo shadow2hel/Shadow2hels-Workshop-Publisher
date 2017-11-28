@@ -44,6 +44,8 @@ namespace WorkshopPublisherForm
 
                 string[] addons = addonslist.Split('\n');
 
+                WSAddons.Clear();
+
                 foreach (var line in addons)
                 {
                     if (line.Length > 5)
@@ -57,6 +59,7 @@ namespace WorkshopPublisherForm
                         split[3] = split[3].Replace("\"", ""); // Quickly removing the quotations cause they annoyed the shit out of me
                         row.SetField(WSAddons.Columns[2], split[3]);
 
+                        
                         WSAddons.Rows.Add(row);
 
                         DataGridViewColumn column = dgvAddonsList.Columns["Name"];
@@ -70,6 +73,22 @@ namespace WorkshopPublisherForm
             catch (Exception exception)
             {
                 MessageBox.Show("Failed to use gmpublish.exe! Is Steam running?");
+            }
+        }
+
+        // Credits to Oscar Jara from stackoverflow
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -309,6 +328,20 @@ namespace WorkshopPublisherForm
             return null;
         }
 
+        public string GetAddonLocation(int ID) {
+            RegistryKey localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64);
+            localKey = Registry.CurrentUser.CreateSubKey(@"Software\Shadow2hel\ShadowsPublisher\addons\" + ID);
+
+            string output = (string)localKey.GetValue("AddonLocation");
+
+            if (output != null) {
+                return output;
+            } else
+            {
+                return null;
+            }
+        }
+
         private void groupBox1_Enter(object sender, EventArgs e)
         {
             
@@ -325,6 +358,8 @@ namespace WorkshopPublisherForm
             AddonID = (int)dgvAddonsList.SelectedRows[0].Cells["ID"].Value;
 
             texbTitle.Text = strAddonname;
+
+            texbFileorFolder.Text = GetAddonLocation(AddonID) != null ? GetAddonLocation(AddonID) : "";
 
             var doc = Supremes.Dcsoup.Parse(new Uri("http://steamcommunity.com/sharedfiles/filedetails/?id=" + AddonID), 5000);
             var WSStuff = doc.Select("div[class=workshopTags]");
@@ -584,6 +619,10 @@ namespace WorkshopPublisherForm
                                         row.SetField("JSON", output);
                                         row.SetField("Location", texbFileorFolder.Text);
                                         ActionQueue.Rows.Add(row);
+
+                                        RegistryKey localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64);
+                                        localKey = Registry.CurrentUser.CreateSubKey(@"Software\Shadow2hel\ShadowsPublisher\addons\" + AddonID);
+                                        localKey.SetValue("AddonLocation", texbFileorFolder.Text);
                                     } else
                                     {
                                         MessageBox.Show("You don't have a title!");
@@ -697,9 +736,19 @@ namespace WorkshopPublisherForm
                                     Gmpublish.StartInfo.RedirectStandardOutput = true;
                                     Gmpublish.Start();
 
-                                    texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd());
+                                    string outputLog = Gmpublish.StandardOutput.ReadToEnd();
 
-                                    Gmpublish.WaitForExit();
+                                    texbLog.AppendText(outputLog);
+
+                                    string newaddon = getBetween(outputLog, "UID:", "Your");
+                                    int NewAddonID = int.Parse(newaddon.Trim());
+
+                                    RegistryKey localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64);
+                                    localKey = Registry.CurrentUser.CreateSubKey(@"Software\Shadow2hel\ShadowsPublisher\addons\" + NewAddonID);
+                                    localKey.SetValue("AddonLocation", Location);
+
+
+                            Gmpublish.WaitForExit();
                                     Gmpublish.Close();
 
                                     File.Delete(Location + "\\addon.json");
@@ -790,7 +839,7 @@ namespace WorkshopPublisherForm
                                     dr.Cells[2].Value = "Done";
                                     break;
                             }
-                             Thread.Sleep(500);
+                            Thread.Sleep(500);
                         }
                 
             }
