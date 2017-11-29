@@ -693,6 +693,15 @@ namespace WorkshopPublisherForm
             texbExtractOutput.Text = UseFolderDialog("lastExtract");
         }
 
+        void SortOutputHandler(object sender, DataReceivedEventArgs e)
+        {
+            Trace.WriteLine(e.Data);
+            this.BeginInvoke(new MethodInvoker(() =>
+            {
+                texbLog.AppendText(e.Data + "\n" ?? string.Empty);
+            }));
+        }
+
         private void btnQueueExecute_Click(object sender, EventArgs e)
         {
                foreach (DataGridViewRow dr in dgvQueue.Rows)
@@ -802,15 +811,10 @@ namespace WorkshopPublisherForm
                                 Gmad.StartInfo.FileName = GmadLocation;
                                 Gmad.StartInfo.Arguments = "create -folder " + "\"" + Location + "\"";
                                 Gmad.StartInfo.RedirectStandardOutput = true;
+                                Gmad.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
                                 Gmad.Start();
-                                
 
-                                if (texbLog.InvokeRequired) {
-                                    texbLog.Invoke(new MethodInvoker( delegate { texbLog.AppendText(Gmad.StandardOutput.ReadToEnd()); }));
-                                } else
-                                {
-                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
-                                }
+                                Gmad.BeginOutputReadLine();
 
                                 Gmad.WaitForExit();
                                 Gmad.Close();
@@ -821,17 +825,10 @@ namespace WorkshopPublisherForm
                                 Gmpublish.StartInfo.FileName = GmpublishLocation;
                                 Gmpublish.StartInfo.Arguments = Command;
                                 Gmpublish.StartInfo.RedirectStandardOutput = true;
+                                Gmpublish.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
                                 Gmpublish.Start();
-                                
-                                
-                                if (texbLog.InvokeRequired)
-                                {
-                                    texbLog.Invoke(new MethodInvoker(delegate { texbLog.AppendText(Gmpublish.StandardOutput.ReadToEnd()); }));
-                                }
-                                else
-                                {
-                                    texbLog.AppendText(Gmad.StandardOutput.ReadToEnd());
-                                }
+
+                                Gmpublish.BeginOutputReadLine();
 
                                 Gmpublish.WaitForExit();
                                 Gmpublish.Close();
@@ -859,7 +856,7 @@ namespace WorkshopPublisherForm
                                 break;
                         }
                     }
-                    await Task.Delay(500);
+                    await Task.Delay(500).ConfigureAwait(false);
                 });
                 RefreshAddonsList();
 
